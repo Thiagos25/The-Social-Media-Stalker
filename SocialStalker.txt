@@ -1,0 +1,166 @@
+
+ssh -i "hdf_demo_thiago.pem" centos@ec2-13-57-236-246.us-west-1.compute.amazonaws.com
+
+
+scp -i "hdf_demo_thiago.pem" nifi-druid.nar centos@ec2-13-57-236-246.us-west-1.compute.amazonaws.com:/usr/hdf/current/nifi/lib
+
+
+scp -i "hdf_demo_thiago.pem" nifi-druid.nar centos@ec2-13-57-236-246.us-west-1.compute.amazonaws.com:/tmp
+
+
+
+
+twitter_demo
+
+{"type":"count";"name":"count"}
+
+
+
+
+
+https://api.social-searcher.com/v2/search?q=Obama&key={0524439466fe3605f94168ccaa7ae2d0}
+
+
+https://www.social-searcher.com/social-buzz/?searchid=5ae90563e4b00ba3f9213c93
+
+
+https://api.social-searcher.com/v2/search?q=Obama&network=facebook
+
+
+https://api.social-searcher.com/v2/search?q=Obama&network=youtube
+
+
+{"tweet_id":${twitter.tweet_id},"created_unixtime":${twitter.unixtime},"created_time":"${twitter.time}","lang":"${twitter.language}","location":"${twitter.location}","displayname":"${twitter.handle}","time_zone":"${twitter.time_zone}","msg":"${twitter.msg:replaceAll('[$&+,:;=?@#|\'<>.^*()%!-]',''):replace('"',''):replace('\n','')}"}
+
+
+{
+"tweet_id":${twitter.tweet_id},
+"created_unixtime":${twitter.unixtime},
+"created_time":"${twitter.time}",
+"lang":"${twitter.language}",
+"location":"${twitter.location}",
+"displayname":"${twitter.handle}",
+"time_zone":"${twitter.time_zone}",
+"msg":"${twitter.msg:replaceAll('[$&+,:;=?@#|\'<>.^*()%!-]',''):replace('"',''):replace('\n','')}"}
+
+
+--> Ajustar variáveis do twitter para o druid: ReplaceText (nifi)
+
+
+
+
+user.userId $.user.userId
+user.lang $.lang
+user.location $.user.location
+user.name $.user.name
+user.network $.network
+user.posted $.posted
+user.sentiment $.sentiment
+user.text $.text
+
+
+{"userId":"${user.userId}","lang":"${user.lang}","location":"${user.location}","name":"${user.name}","network":"${user.network}","posted":"${user.posted}","sentiment":"${user.sentiment}","text":"${user.text:replaceAll('[$&+,:;=?@#|\'<>.^*()%!-]',''):replace('"',''):replace('\n','')}","timestamp":${now()}}
+
+
+{"userId":"${user.userId}",
+"lang":"${user.lang}",
+"location":"${user.location}",
+"name":"${user.name}",
+"network":"${user.network}",
+"posted":"${user.posted}",
+"sentiment":"${user.sentiment}",
+"text":"${user.text:replaceAll('[$&+,:;=?@#|\'<>.^*()%!-]',''):replace('"',''):replace('\n','')}",
+"timestamp":${now()}}
+
+
+
+{"name": "count", "type": "count"}
+
+
+tweet_id,created_unixtime,created_time,lang,location,displayname,time_zone,msg
+
+
+
+https://api.social-searcher.com/v2/search?q=Hortonworks,IBM&limit=100&network=facebook&facebook_pages=facebook.com/hortonworks,facebook.com/Db2community,facebook.com/IBMPowerSystems
+
+
+
+
+
+ssh -i "hdf_demo_thiago.pem" centos@ec2-52-53-218-95.us-west-1.compute.amazonaws.com
+
+
+
+mysql -h localhost -P 3306 -u user -p
+
+
+
+CREATE USER 'hive'@'localhost' IDENTIFIED BY 'qweqwe';
+GRANT ALL PRIVILEGES ON * . * TO 'hive'@'localhost';
+FLUSH PRIVILEGES;
+CREATE DATABASE hive;
+
+
+CREATE EXTERNAL TABLE SocialStalker
+STORED BY 'org.apache.hadoop.hive.druid.DruidStorageHandler'
+TBLPROPERTIES ("druid.datasource" = "SocialStalker");
+
+
+hdfs dfsadmin -safemode leave
+
+hdfs dfs -mkdir /user/admin
+
+hdfs dfs -chown -R hdfs /user/admin
+
+
+--> Ativar Interactive Query
+
+--> Download hive-druid-handler
+
+
+https://javalibs.com/artifact/org.apache.hive/hive-druid-handler
+https://github.com/apache/hive/tree/master/druid-handler
+
+sh -i "hdf_demo_thiago.pem" centos@ec2-52-53-218-95.us-west-1.compute.amazonaws.com
+
+scp -i "hdf_demo_thiago.pem" hive-druid-handler-3.0.0.3.0.0.3-2.jar centos@ec2-52-53-218-95.us-west-1.compute.amazonaws.com:/tmp
+
+
+cp hive-druid-handler-3.0.0.3.0.0.3-2.jar /usr/hdp/current/hive-server2/lib
+
+realpath hive-druid-handler-3.0.0.3.0.0.3-2.jar
+
+
+
+hadoop fs -put /usr/hdp/current/hive-server2/lib/hive-druid-handler-3.0.0.3.0.0.3-2.jar /tmp
+
+ADD JAR hdfs:///tmp/hive-druid-handler-3.0.0.3.0.0.3-2.jar;
+ADD JAR /usr/hdp/current/hive-server2/lib/hive-druid-handler-3.0.0.3.0.0.3-2.jar;
+
+
+!connect jdbc:hive2://localhost:10000/default
+
+!connect jdbc:hive2://localhost:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2-hive2
+
+CREATE EXTERNAL TABLE SocialStalker
+STORED BY 'org.apache.hadoop.hive.druid.DruidStorageHandler'
+TBLPROPERTIES ("druid.datasource" = "SocialStalker");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
